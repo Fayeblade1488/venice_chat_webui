@@ -1,0 +1,19 @@
+{
+  "model": "venice-uncensored",
+  "temperature": 0.9,
+  "top_p": 0.95,
+  "messages": [
+    {
+      "role": "user",
+      "content": "Give me three unusual UI metaphors for a privacy dashboard."
+    }
+  ],
+  "venice_parameters": {
+    "strip_thinking_response": false,
+    "disable_thinking": false,
+    "enable_web_search": "off",
+    "enable_web_citations": false,
+    "include_venice_system_prompt": true
+  },
+  "max_completion_tokens": 300
+}

@@ -1,0 +1,54 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+positions:
+  filename: /tmp/positions.yaml
+
+scrape_configs:
+  - job_name: docker
+    static_configs:
+      - targets: [localhost]
+        labels:
+          job: docker
+          __path__: /var/lib/docker/containers/*/*-json.log
+
+  - job_name: litellm-proxy
+    static_configs:
+      - targets: [localhost]
+        labels:
+          job: litellm
+          __path__: /logs/litellm/*.log
+
+# ---- Redaction stages ----
+# Mask emails, API keys, and Authorization tokens in all collected logs
+# Applies both to docker logs and litellm file logs
+  - job_name: redact
+    static_configs:
+      - targets: [localhost]
+        labels:
+          job: redact
+          __path__: /var/log/*.log
+    pipeline_stages:
+      - match:
+          selector: '{job=~".*"}'
+          stages:
+            - replace:
+                source: message
+                expression: '(sk-[A-Za-z0-9]{16,})'
+                replace: 'sk-REDACTED'
+            - replace:
+                source: message
+                expression: '([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})'
+                replace: '[email redacted]'
+            - replace:
+                source: message
+                expression: '(?i)(api[_-]?key|authorization|bearer)\s*[:=]\s*[A-Za-z0-9._-]{10,}'
+                replace: 'API_KEY=REDACTED'
+            - replace:
+                source: message
+                expression: '(vvv_[A-Za-z0-9._-]{10,})'
+                replace: 'vvv_REDACTED'

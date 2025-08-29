@@ -1,0 +1,50 @@
+# LiteLLM proxy config → routes OpenAI-compatible calls to Venice
+litellm_settings:
+  cors: true
+  add_headers: true
+  enable_streaming: true
+  telemetry: false
+  num_retries: 2
+  timeout: 120
+
+general_settings:
+  master_key: ${LITELLM_MASTER_KEY}  # keep clients behind this key
+
+# Venice OpenAI-compatible base; env carries key/base to the proxy
+environment_variables:
+  OPENAI_API_KEY: ${VENICE_API_KEY}
+  OPENAI_API_BASE: https://api.venice.ai/api/v1
+
+# Map canonical Venice IDs (from providers.yaml) to LiteLLM model entries.
+# This keeps the gateway self-documenting and stable across API updates.
+model_list:
+  - model_name: venice-uncensored
+    litellm_params: { provider: openai, model: venice-uncensored, api_base: https://api.venice.ai/api/v1, api_key: ${VENICE_API_KEY} }
+  - model_name: qwen-2.5-qwq-32b
+    litellm_params: { provider: openai, model: qwen-2.5-qwq-32b, api_base: https://api.venice.ai/api/v1, api_key: ${VENICE_API_KEY} }
+  - model_name: qwen3-4b
+    litellm_params: { provider: openai, model: qwen3-4b, api_base: https://api.venice.ai/api/v1, api_key: ${VENICE_API_KEY} }
+  - model_name: mistral-31-24b
+    litellm_params: { provider: openai, model: mistral-31-24b, api_base: https://api.venice.ai/api/v1, api_key: ${VENICE_API_KEY} }
+  - model_name: mistral-32-24b
+    litellm_params: { provider: openai, model: mistral-32-24b, api_base: https://api.venice.ai/api/v1, api_key: ${VENICE_API_KEY} }
+  - model_name: qwen3-235b
+    litellm_params: { provider: openai, model: qwen3-235b, api_base: https://api.venice.ai/api/v1, api_key: ${VENICE_API_KEY} }
+  - model_name: llama-3.2-3b
+    litellm_params: { provider: openai, model: llama-3.2-3b, api_base: https://api.venice.ai/api/v1, api_key: ${VENICE_API_KEY} }
+  - model_name: llama-3.3-70b
+    litellm_params: { provider: openai, model: llama-3.3-70b, api_base: https://api.venice.ai/api/v1, api_key: ${VENICE_API_KEY} }
+  - model_name: llama-3.1-405b
+    litellm_params: { provider: openai, model: llama-3.1-405b, api_base: https://api.venice.ai/api/v1, api_key: ${VENICE_API_KEY} }
+  - model_name: dolphin-2.9.2-qwen2-72b
+    litellm_params: { provider: openai, model: dolphin-2.9.2-qwen2-72b, api_base: https://api.venice.ai/api/v1, api_key: ${VENICE_API_KEY} }
+  - model_name: deepseek-r1-671b
+    litellm_params: { provider: openai, model: deepseek-r1-671b, api_base: https://api.venice.ai/api/v1, api_key: ${VENICE_API_KEY} }
+  - model_name: deepseek-coder-v2-lite
+    litellm_params: { provider: openai, model: deepseek-coder-v2-lite, api_base: https://api.venice.ai/api/v1, api_key: ${VENICE_API_KEY} }
+
+  # Vision/coder variants
+  - model_name: qwen-2.5-vl
+    litellm_params: { provider: openai, model: qwen-2.5-vl, api_base: https://api.venice.ai/api/v1, api_key: ${VENICE_API_KEY} }
+  - model_name: qwen-2.5-coder-32b
+    litellm_params: { provider: openai, model: qwen-2.5-coder-32b, api_base: https://api.venice.ai/api/v1, api_key: ${VENICE_API_KEY} }

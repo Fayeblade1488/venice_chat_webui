@@ -1,0 +1,31 @@
+# Environment variables
+.env
+
+# Docker volumes
+tailscale-state/
+litellm-logs/
+openwebui-data/
+openwebui-cache/
+perplexica-data/
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
+*.swo
+*.swp
+*.swn
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Logs
+*.log

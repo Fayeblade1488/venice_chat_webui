@@ -1,0 +1,8 @@
+# Example Caddyfile (optional). Use only if you want public HTTPS.
+# Replace example.com with your domain and add proper DNS/ACME settings.
+
+# https://example.com {
+#   reverse_proxy /openwebui* openwebui:8080
+#   reverse_proxy /perplexica* perplexica:3000
+#   reverse_proxy /v1* litellm:4000
+# }

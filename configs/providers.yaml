@@ -1,0 +1,189 @@
+providers:
+  - id: venice
+    name: Venice.ai
+    base_url: https://api.venice.ai/api/v1
+    api_keys:
+      openai: VENICE_API_KEY
+    models:
+      - id: venice-uncensored
+        name: "Venice Uncensored 1.1"
+        context: 32768
+        provider: venice
+        abilities:
+          temperature:
+            supported: true
+          vision:
+            supported: false
+          system_message:
+            supported: true
+          tools:
+            supported: false
+      - id: qwen-2.5-qwq-32b
+        name: "Venice Reasoning"
+        context: 32768
+        provider: venice
+        abilities:
+          temperature:
+            supported: true
+          vision:
+            supported: false
+          system_message:
+            supported: true
+          tools:
+            supported: false
+      - id: qwen3-4b
+        name: "Venice Small"
+        context: 40960
+        provider: venice
+        abilities:
+          temperature:
+            supported: true
+          vision:
+            supported: false
+          system_message:
+            supported: true
+          tools:
+            supported: true
+      - id: mistral-31-24b
+        name: "Venice Medium"
+        context: 131072
+        provider: venice
+        abilities:
+          temperature:
+            supported: true
+          vision:
+            supported: true
+          system_message:
+            supported: true
+          tools:
+            supported: true
+      - id: mistral-32-24b
+        name: "Venice Medium"
+        context: 131072
+        provider: venice
+        abilities:
+          temperature:
+            supported: true
+          vision:
+            supported: true
+          system_message:
+            supported: true
+          tools:
+            supported: true
+      - id: qwen3-235b
+        name: "Venice Large 1.1"
+        context: 131072
+        provider: venice
+        abilities:
+          temperature:
+            supported: true
+          vision:
+            supported: false
+          system_message:
+            supported: true
+          tools:
+            supported: true
+      - id: llama-3.2-3b
+        name: "Llama 3.2 3B"
+        context: 131072
+        provider: venice
+        abilities:
+          temperature:
+            supported: true
+          vision:
+            supported: false
+          system_message:
+            supported: true
+          tools:
+            supported: true
+      - id: llama-3.3-70b
+        name: "Llama 3.3 70B"
+        context: 65536
+        provider: venice
+        abilities:
+          temperature:
+            supported: true
+          vision:
+            supported: false
+          system_message:
+            supported: true
+          tools:
+            supported: true
+      - id: llama-3.1-405b
+        name: "Llama 3.1 405B"
+        context: 65536
+        provider: venice
+        abilities:
+          temperature:
+            supported: true
+          vision:
+            supported: false
+          system_message:
+            supported: true
+          tools:
+            supported: false
+      - id: dolphin-2.9.2-qwen2-72b
+        name: "Dolphin 72B"
+        context: 32768
+        provider: venice
+        abilities:
+          temperature:
+            supported: true
+          vision:
+            supported: false
+          system_message:
+            supported: true
+          tools:
+            supported: false
+      - id: qwen-2.5-vl
+        name: "Qwen 2.5 VL 72B"
+        context: 32768
+        provider: venice
+        abilities:
+          temperature:
+            supported: true
+          vision:
+            supported: true
+          system_message:
+            supported: true
+          tools:
+            supported: false
+      - id: qwen-2.5-coder-32b
+        name: "Qwen 2.5 Coder 32B"
+        context: 32768
+        provider: venice
+        abilities:
+          temperature:
+            supported: true
+          vision:
+            supported: false
+          system_message:
+            supported: true
+          tools:
+            supported: false
+      - id: deepseek-r1-671b
+        name: "DeepSeek R1 671B"
+        context: 131072
+        provider: venice
+        abilities:
+          temperature:
+            supported: true
+          vision:
+            supported: false
+          system_message:
+            supported: true
+          tools:
+            supported: false
+      - id: deepseek-coder-v2-lite
+        name: "DeepSeek Coder V2 Lite"
+        context: 131072
+        provider: venice
+        abilities:
+          temperature:
+            supported: true
+          vision:
+            supported: false
+          system_message:
+            supported: true
+          tools:
+            supported: false

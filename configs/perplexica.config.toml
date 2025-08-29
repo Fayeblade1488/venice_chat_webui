@@ -1,0 +1,14 @@
+[SEARXNG]
+URL = "http://searxng:8080"
+FORMAT = "json"
+
+[CUSTOM_OPENAI]
+API_URL = "http://policy_sidecar:8088"
+MODEL_NAME = "llama-3.3-70b"   # change to any of your Venice IDs as needed
+API_KEY = "sk-local"
+
+[OPENAI]
+ENABLED = false
+
+[OLLAMA]
+ENABLED = false

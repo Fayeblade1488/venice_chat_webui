@@ -1,0 +1,127 @@
+version: "3.9"
+
+x-common-env: &common-env
+  TZ: "UTC"
+
+services:
+  # Private network access via Tailscale (no public ports required)
+  tailscale:
+    image: tailscale/tailscale:latest
+    hostname: llm-vps
+    cap_add: ["NET_ADMIN"]
+    network_mode: "host"
+    environment:
+      TS_AUTHKEY: ${TS_AUTHKEY}
+      TS_STATE_DIR: /var/lib/tailscale
+      TS_EXTRA_ARGS: "--ssh --accept-routes"
+    volumes:
+      - tailscale-state:/var/lib/tailscale
+      - /dev/net/tun:/dev/net/tun
+    restart: unless-stopped
+
+  # OpenAI-compatible gateway → Venice
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    command: ["--config", "/app/config.yaml", "--detailed_debug"]
+    environment:
+      <<: *common-env
+      VENICE_API_KEY: ${VENICE_API_KEY}
+    volumes:
+      - ./configs/litellm_config.yaml:/app/config.yaml:ro
+      - ./configs/providers.yaml:/app/providers.yaml:ro
+      - litellm-logs:/var/log/litellm
+    ports:
+      - "4000:4000"  # keep private; accessed via Tailscale/localhost
+    depends_on: [tailscale]
+    restart: unless-stopped
+
+  # Primary chat UI with local storage
+
+# Policy sidecar enforces defaults, allows header overrides, and redacts logs
+policy_sidecar:
+  build:
+    context: ./services/policy_sidecar
+    dockerfile: Dockerfile
+  environment:
+    LITELLM_BASE_URL: http://litellm:4000
+    POLICY_API_TOKEN: ${POLICY_API_TOKEN:-}   # optional
+    POLICY_ALLOW_HEADER_OVERRIDES: "${POLICY_ALLOW_HEADER_OVERRIDES:-false}"
+    POLICY_STRIP_THINKING_DEFAULT: "true"
+    POLICY_DISABLE_THINKING_DEFAULT: "true"
+    POLICY_ENABLE_WEB_SEARCH_DEFAULT: "off"   # off|auto|on
+    POLICY_ENABLE_CITATIONS_DEFAULT: "false"
+    POLICY_INCLUDE_RESULTS_IN_STREAM_DEFAULT: "false"
+    POLICY_INCLUDE_VENICE_SYSTEM_PROMPT_DEFAULT: "true"
+  ports:
+    - "8088:8088"
+  depends_on: [ litellm ]
+  restart: unless-stopped
+
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:main
+    environment:
+      <<: *common-env
+      OPENAI_API_KEY: "sk-local"
+      OPENAI_API_BASE_URL: "http://policy_sidecar:8088"
+      WEBUI_AUTH: "true"
+      WEBUI_ADMIN_USER: "admin"
+      WEBUI_ADMIN_PASSWORD: "${WEBUI_ADMIN_PASSWORD}"
+    volumes:
+      - openwebui-data:/app/backend/data
+      - openwebui-cache:/app/backend/cache
+    ports:
+      - "3001:8080"
+    depends_on: [litellm]
+    restart: unless-stopped
+
+  # Meta-search backend for Perplexica
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    restart: unless-stopped
+
+  searxng:
+    image: searxng/searxng:latest
+    environment:
+      <<: *common-env
+      SEARXNG_BASE_URL: "http://searxng:8080"
+      SEARXNG_REDIS_URL: "redis://redis:6379/0"
+    volumes:
+      - ./configs/searxng/settings.yml:/etc/searxng/settings.yml:ro
+    ports:
+      - "8085:8080"
+    depends_on: [redis]
+    restart: unless-stopped
+
+  # Perplexity-like UI/agent
+  perplexica:
+    image: itzcrazykns/perplexica:latest
+    volumes:
+      - ./configs/perplexica.config.toml:/app/config.toml:ro
+      - perplexica-data:/app/uploads
+    environment:
+      <<: *common-env
+    ports:
+      - "3000:3000"
+    depends_on: [searxng]
+    restart: unless-stopped
+
+  # Optional reverse proxy using Caddy (disabled by default).
+  # If you want a single public port with HTTPS (Cloudflare tunnel or your certs),
+  # uncomment this service and provide a proper Caddyfile in ./reverse-proxy/Caddyfile
+  # caddy:
+  #   image: caddy:2-alpine
+  #   volumes:
+  #     - ./reverse-proxy/Caddyfile:/etc/caddy/Caddyfile:ro
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   depends_on: [openwebui, perplexica, litellm]
+  #   restart: unless-stopped
+
+volumes:
+  tailscale-state:
+  litellm-logs:
+  openwebui-data:
+  openwebui-cache:
+  perplexica-data:

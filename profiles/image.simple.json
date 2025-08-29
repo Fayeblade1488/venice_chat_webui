@@ -1,0 +1,6 @@
+{
+  "model": "default",
+  "prompt": "minimalist line icon of a fox",
+  "size": "512x512",
+  "response_format": "b64_json"
+}

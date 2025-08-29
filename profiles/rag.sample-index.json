@@ -1,0 +1,16 @@
+[
+  {
+    "id": "doc1",
+    "text": "Open WebUI stores chats locally under openwebui-data.",
+    "metadata": {
+      "source": "readme"
+    }
+  },
+  {
+    "id": "doc2",
+    "text": "Perplexica uses SearXNG for web retrieval and LiteLLM for LLM calls.",
+    "metadata": {
+      "source": "readme"
+    }
+  }
+]

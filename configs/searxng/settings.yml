@@ -1,0 +1,21 @@
+use_default_settings: true
+general:
+  instance_name: "private-searxng"
+server:
+  port: 8080
+  bind_address: 0.0.0.0
+search:
+  safe_search: 0
+ui:
+  static_use_hash: true
+  default_theme: simple
+outgoing:
+  request_timeout: 3.0
+  useragent_suffix: "perplexica"
+redis:
+  url: redis://redis:6379/0
+engines:
+  - name: duckduckgo
+    engine: duckduckgo
+  - name: google
+    engine: google

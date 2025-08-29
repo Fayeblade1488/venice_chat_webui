@@ -1,0 +1,21 @@
+{
+  "model": "llama-3.3-70b",
+  "temperature": 0.3,
+  "top_p": 0.9,
+  "messages": [
+    {
+      "role": "user",
+      "content": "test: one-line answer and include sources"
+    }
+  ],
+  "venice_parameters": {
+    "enable_web_search": "auto",
+    "enable_web_citations": true,
+    "include_search_results_in_stream": true,
+    "strip_thinking_response": true,
+    "disable_thinking": true,
+    "include_venice_system_prompt": true
+  },
+  "max_completion_tokens": 256,
+  "stream": false
+}

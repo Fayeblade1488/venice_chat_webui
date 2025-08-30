@@ -1,3 +1,5 @@
+<img width="1536" height="1024" alt="40078e2e20570734af54dc517e4b9be10d02e244799548c2e62768777bca4b79" src="https://github.com/user-attachments/assets/1b34fa79-fffb-478b-8a7f-4256d6bfd30e" />
+
 # Open WebUI + LiteLLM (Venice) + Perplexica + SearXNG + Tailscale
 
 **What this is**: a small, private stack. Open WebUI persists chats on-disk. LiteLLM proxies OpenAI-compatible requests to Venice at `https://api.venice.ai/api/v1`. Perplexica provides a Perplexity-like experience using SearXNG for retrieval. Tailscale gives private access from your devices.
